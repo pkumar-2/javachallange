@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- NOTE: 'monitorInterval' defines interval in seconds how often log4j2 will check for config changes -->
+<Configuration monitorInterval="30">
+    <!-- tag::debugheader[] -->
+    <!-- This filter is used to enable debug logging for a specific request -->
+    <DynamicThresholdFilter key="x-intp-debug" onMatch="ACCEPT" onMismatch="NEUTRAL">
+        <KeyValuePair key="true" value="TRACE"/>
+    </DynamicThresholdFilter>
+    <!-- end::debugheader[] -->
+
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT" >
+            <PatternLayout pattern="[[%d{ISO8601}||%X||%-5p||%t||%c{1.}||%m||%throwable{full}]]%n"/>
+            <!--<JSONLayout compact="true" charset="utf-8" eventEol="true" properties="true"/>-->
+        </Console>
+
+        <RollingFile name="LOGFILE" append="true" fileName="logs/demo.log" filePattern="logs/demo.log_%d{yyyyMMdd_HH}">
+            <Filters>
+                <!-- Only write to this file for test or production profiles -->
+                <ThreadContextMapFilter onMatch="ACCEPT" onMismatch="DENY" operator="or">
+                    <KeyValuePair key="x-demo-profile" value="mst00"/>
+                    <KeyValuePair key="x-demo-profile" value="systest"/>
+                    <KeyValuePair key="x-demo-profile" value="production"/>
+                </ThreadContextMapFilter>
+            </Filters>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="3"/>
+            <PatternLayout charset="UTF-8">
+                <Pattern>[["[%d{ISO8601}]","%X{x-vf-trace-transaction-id}","%c","%p","%m","%X{errorDetails},%throwable{full}"]]%n</Pattern>
+            </PatternLayout>
+        </RollingFile>
+
+        <!-- http://logging.apache.org/log4j/2.x/manual/appenders.html#RollingFileAppender -->
+        <RollingFile name="LOGFILEJSON" append="true" fileName="logs/demo-json.log" filePattern="logs/demo-json.log_%d{yyyyMMdd_HH}">
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+            <!-- For more info see http://logging.apache.org/log4j/2.x/manual/layouts.html#JSONLayout -->
+            <JSONLayout compact="true" charset="utf-8" eventEol="true" properties="true"/>
+        </RollingFile>
+
+        <RollingFile name="DEBUGLOGFILE" append="true" fileName="logs/debugdemo.log" filePattern="logs/debugdemo.log_%d{yyyyMMdd_HH}">
+            <Filters>
+                <ThreadContextMapFilter onMatch="ACCEPT" onMismatch="DENY">
+                    <KeyValuePair key="x-intp-debug" value="true"/>
+                </ThreadContextMapFilter>
+            </Filters>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+            <PatternLayout charset="UTF-8">
+                <Pattern>[["[%d{ISO8601}]","%X{x-vf-trace-transaction-id}","%c","%p",%m,%throwable{full}]]%n</Pattern>
+            </PatternLayout>
+        </RollingFile>
+        <RollingFile name="OUTBOUNDLOGFILE" append="true" fileName="logs/outbound_access.log" filePattern="logs/outbound_access.log_%d{yyyyMMdd_HH}">
+            <Policies><OnStartupTriggeringPolicy/>
+            <TimeBasedTriggeringPolicy/></Policies>
+            <DefaultRolloverStrategy max="5"/>
+            <PatternLayout charset="UTF-8"><Pattern>"[%t]","[%d{ISO8601}]","%X","%p",%m,%throwable{full}%n</Pattern></PatternLayout>
+        </RollingFile>
+        <RollingFile name="SMAPILOGFILE" append="true" fileName="logs/smapi-access.log" filePattern="logs/smapi-access.log_%d{yyyyMMdd_HH}">
+            <Policies><OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy/></Policies>
+            <DefaultRolloverStrategy max="5"/>
+            <PatternLayout charset="UTF-8"><Pattern>"[%t]","[%d{ISO8601}]","%X","%p",%m,%throwable{full}%n</Pattern></PatternLayout>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.apache.coyote" level="warn"/>
+        <Logger name="org.apache.catalina" level="warn"/>
+        <Logger name="org.apache.catalina.core" level="info"/>
+        <Logger name="org.springframework" level="warn"/>
+<!--
+        <Logger name="com.mongodb" level="info"/>
+-->
+    
+        <!--<Logger name="org.springframework.web.servlet.resource.PathResourceResolver" level="trace"/>-->
+        <!--<Logger name="org.springframework.boot.actuate.trace.WebRequestTraceFilter" level="trace"/>-->
+
+        <Root level="debug">
+            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="LOGFILE"/>
+            <AppenderRef ref="LOGFILEJSON"/>
+            <AppenderRef ref="DEBUGLOGFILE"/>
+<!--
+            <appender-ref ref="SMAPILOGFILE"/>
+-->
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,4 +1,4 @@
-/*
+
 package com.db.awmd.challenge;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -103,4 +103,4 @@ public class AccountsControllerTest {
         content().string("{\"accountId\":\"" + uniqueAccountId + "\",\"balance\":123.45}"));
   }
 }
-*/
+

@@ -1,4 +1,4 @@
-/*
+
 package com.db.awmd.challenge;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,4 +45,4 @@ public class AccountsServiceTest {
 
   }
 }
-*/
+

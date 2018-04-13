@@ -33,14 +33,14 @@ public class AccountsService {
 
     try {
       sourceAcct = accountsRepository.getAccount(fromAccId);
-      System.out.println("source account info is" + sourceAcct.getAccountId() + " balance is " + sourceAcct.getBalance());//fixme if we get time it will get replcaed with logger
+      System.out.println("source account info is" + sourceAcct.getAccountId() + " balance is " + sourceAcct.getBalance());//fixme if we get time it will get replaced with logger
     } catch (Exception exp) {
       throw new AccountException(String.valueOf("User account id " + fromAccId + ", does not exist!"));
     }
 
     try {
       destAcct = accountsRepository.getAccount(toAccId);
-      System.out.println("destination account info is " + destAcct.getAccountId() + " balance is " + destAcct.getBalance());//fixme if we get time it will get replcaed with logger
+      System.out.println("destination account info is " + destAcct.getAccountId() + " balance is " + destAcct.getBalance());//fixme if we get time it will get replaced with logger
     } catch (Exception exp) {
       throw new AccountException(String.valueOf("User account id " + toAccId + ", does not exist!"));
     }

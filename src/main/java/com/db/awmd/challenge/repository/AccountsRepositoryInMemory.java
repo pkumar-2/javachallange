@@ -43,7 +43,7 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
    */
   @Override
   public synchronized void withdraw(String accId, Account acc, BigDecimal bal) {
-    synchronized (lock) {
+    synchronized (this) {
       if (accounts.putIfAbsent(accId, acc) != null) {
         accounts.get(accId).setBalance(acc.getBalance().subtract(bal));
       }
@@ -58,7 +58,7 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
    */
   @Override
   public synchronized void deposit(String accId, Account acc, BigDecimal bal) {
-    synchronized (lock) {
+    synchronized (this) {
       if (accounts.putIfAbsent(accId, acc) != null) {
         accounts.get(accId).setBalance(acc.getBalance().add(bal));
       }

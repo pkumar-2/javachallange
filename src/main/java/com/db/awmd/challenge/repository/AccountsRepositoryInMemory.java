@@ -47,7 +47,6 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
       if (accounts.putIfAbsent(accId, acc) != null) {
         accounts.get(accId).setBalance(acc.getBalance().subtract(bal));
       }
-      System.out.println(accId + ", your balance is now" + accounts.get(accId).getBalance());
     }
   }
 
@@ -63,7 +62,6 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
       if (accounts.putIfAbsent(accId, acc) != null) {
         accounts.get(accId).setBalance(acc.getBalance().add(bal));
       }
-      System.out.println(accId + ", your balance is now" + accounts.get(accId).getBalance());
     }
   }
 

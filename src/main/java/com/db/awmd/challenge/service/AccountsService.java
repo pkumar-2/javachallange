@@ -51,7 +51,7 @@ public class AccountsService {
       throw new AccountException(String.valueOf("User account id " + toAccId + ", does not exist!"));
     }
 
-    if (sourceAcct.getBalance().compareTo(BigDecimal.ZERO) > 0 && sourceAcct.getBalance().compareTo(value) > 0) {
+    if (sourceAcct.getBalance().compareTo(BigDecimal.ZERO) > 0 && sourceAcct.getBalance().compareTo(value) >= 0) {
         accountsRepository.withdraw(fromAccId, sourceAcct, value);
         accountsRepository.deposit(toAccId, destAcct, value);
     } else {
